@@ -1,0 +1,32 @@
+
+name: Build Xray Proxy APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Install Gomobile
+        run: |
+          go install golang.org/x/mobile/cmd/gomobile@latest
+          gomobile init
+      - name: Build Android Library
+        run: |
+          cd xray && go mod tidy
+          gomobile bind -v -target=android -o ../app/libs/xray.aar
+      - name: Build APK
+        run: bash ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: XrayProxy-Debug
+          path: app/build/outputs/apk/debug/*.apk
