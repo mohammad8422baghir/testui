@@ -103,14 +103,12 @@ jobs:
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   
-                  // ایجاد یک صفحه ساده برای نمایش وضعیت
                   TextView tv = new TextView(this);
                   tv.setText("✅ پراکسی Xray با موفقیت روی 127.0.0.1:10808 در حال اجراست.\n\nدی‌ان‌اس شکن ست شد.\n\nحالا می‌توانید V2rayNG را متصل کنید.\n(این برنامه را در پس‌زمینه باز نگه دارید)");
                   tv.setPadding(50, 50, 50, 50);
                   tv.setTextSize(18f);
                   setContentView(tv);
                   
-                  // اجرای هسته در پس‌زمینه
                   new Thread(() -> {
                       try {
                           String config = "{\"dns\":{\"servers\":[\"170.22.122.101\",\"185.51.200.1\",\"8.8.8.8\"]},\"inbounds\":[{\"port\":10808,\"listen\":\"127.0.0.1\",\"protocol\":\"socks\",\"settings\":{\"udp\":true}}],\"outbounds\":[{\"protocol\":\"freedom\",\"settings\":{\"domainStrategy\":\"UseIP\"}}]}";
@@ -120,8 +118,13 @@ jobs:
               }
           }
           EOF
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.4'
           
-      - name: Build APK with System Gradle
+      - name: Build APK
         run: gradle assembleDebug
         
       - name: Upload APK
