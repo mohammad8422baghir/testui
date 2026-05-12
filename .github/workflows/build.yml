@@ -20,13 +20,14 @@ jobs:
       - name: Install Gomobile
         run: |
           go install golang.org/x/mobile/cmd/gomobile@latest
+          go install golang.org/x/mobile/cmd/gobind@latest
           gomobile init
           
       - name: Build Android Library
         run: |
           cd xray
-          go get golang.org/x/mobile/bind
           go mod tidy
+          go get golang.org/x/mobile/bind
           gomobile bind -v -target=android -androidapi 21 -o ../app/libs/xray.aar
           
       - name: Build APK
