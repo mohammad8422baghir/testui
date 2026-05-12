@@ -24,7 +24,9 @@ jobs:
           
       - name: Build Android Library
         run: |
-          cd xray && go mod tidy
+          cd xray
+          go get golang.org/x/mobile/bind
+          go mod tidy
           gomobile bind -v -target=android -androidapi 21 -o ../app/libs/xray.aar
           
       - name: Build APK
